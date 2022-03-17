@@ -5,12 +5,12 @@ typedef struct PeopleList{
     struct PeopleList *next;
 }LIST;
 class ListPeople {
-    private:
-        LIST *head;
+private:
+    LIST *head;
 
-    public:
+public:
     ListPeople();
     ~ListPeople();
-        void addMember(char fn[20],char ln[20],char data[20]);
-        void showList();
+    void addMember(char fn[20],char ln[20],char data[20]);
+    void showList();
 };

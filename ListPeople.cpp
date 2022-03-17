@@ -1,7 +1,7 @@
 #include<iostream>
 #include<cstdio>
 #include<string.h>
-#include "ListPeople.h"
+
 using namespace std;
 void Test(LIST *p)
 {
@@ -32,6 +32,5 @@ void ListPeople::addMember(char fn[20],char ln[20],char data[20]){
 void ListPeople::showList(){
     LIST *aux;
     for(aux=head;aux->next==NULL;aux=aux->next)
-            printf("%s %s %s\n",aux->firstName,aux->lastName,aux->date);      
-        
+        cout<<aux->firstName<<" "<<aux->lastName<<" "<<aux->date<<endl;
 }

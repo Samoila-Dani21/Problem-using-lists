@@ -32,7 +32,6 @@ public:
 ListPeople::ListPeople(){  
     head=NULL;
     
-   // head->prev=NULL;
 }
 ListPeople::~ListPeople(){
 }
@@ -44,6 +43,7 @@ void ListPeople::addMember(char fn[20],char ln[20],char data[20]){
             head=new LIST;
             Test(head);
             head->next=NULL;
+            head->prev=NULL;
             aux=head;
 
             strcpy(aux->date,data);    
@@ -56,10 +56,11 @@ void ListPeople::addMember(char fn[20],char ln[20],char data[20]){
         {
             q=aux;
             aux=aux->next;
-           // aux->prev=p;
+            
         }
         aux=new LIST;
         Test(aux);
+        aux->prev=q;
         strcpy(aux->date,data);    
         strcpy(aux->firstName,fn);
         strcpy(aux->lastName,ln);
@@ -77,11 +78,36 @@ void ListPeople::sortByFamily(){
     for(aux=head;aux!=NULL;aux=aux->next)
         for(p=aux->next;p!=NULL;p=p->next)
             if(strcmp(aux->firstName,p->firstName)<0)
+                if(aux==head)
                 {
+                    /*
+                    copy=aux;
+                    aux=p;
+                    p=copy;
+*/                  
+                    head=p;
+                    copy=aux->next;
+                    aux->next=p->next;
+                    p->next=copy;
+                    /*
+                    p->prev->next=aux;
+                    copy=aux->next;
+                    aux->next=p->next;
+                    p->next=copy;
+*/
+                }
+                else
+                {
+                    aux->prev->next=p;
+                    p->prev->next=aux;
+                    copy=aux->next;
+                    aux->next=p->next;
+                    p->next=copy;
+/*
                     copy=aux->prev->next;
                     aux->prev->next=p->prev->next;
                     p->prev->next=aux;
-                   /* copy=aux->next;
+                    copy=aux->next;
                     aux->next=p->next;
                     p->next=copy;
                     copy=aux;
@@ -107,7 +133,7 @@ int main()
             list.addMember(firstName,lastName,date);
         }
     
-    //list.sortByFamily();
+    list.sortByFamily();
     list.showList();
     fin.close();
 }

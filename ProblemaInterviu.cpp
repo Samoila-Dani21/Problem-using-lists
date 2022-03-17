@@ -28,6 +28,7 @@ public:
     void addMember(char fn[20],char ln[20],char data[20]);
     void showList();
     void sortByFamily();
+    void swap(LIST **head,LIST *p,LIST* q);
 };
 ListPeople::ListPeople(){  
     head=NULL;
@@ -74,46 +75,24 @@ void ListPeople::showList(){
         cout<<aux->firstName<<" "<<aux->lastName<<" "<<aux->date<<endl;
 }
 void ListPeople::sortByFamily(){
-    LIST *aux,*p,*copy;
+    LIST *aux,*p;
+    char copyFirstName[20],copyLastName[20],copyDate[11];
     for(aux=head;aux!=NULL;aux=aux->next)
         for(p=aux->next;p!=NULL;p=p->next)
-            if(strcmp(aux->firstName,p->firstName)<0)
-                if(aux==head)
+            if(strcmp(aux->date,p->date)>0)
                 {
-                    /*
-                    copy=aux;
-                    aux=p;
-                    p=copy;
-*/                  
-                    head=p;
-                    copy=aux->next;
-                    aux->next=p->next;
-                    p->next=copy;
-                    /*
-                    p->prev->next=aux;
-                    copy=aux->next;
-                    aux->next=p->next;
-                    p->next=copy;
-*/
-                }
-                else
-                {
-                    aux->prev->next=p;
-                    p->prev->next=aux;
-                    copy=aux->next;
-                    aux->next=p->next;
-                    p->next=copy;
-/*
-                    copy=aux->prev->next;
-                    aux->prev->next=p->prev->next;
-                    p->prev->next=aux;
-                    copy=aux->next;
-                    aux->next=p->next;
-                    p->next=copy;
-                    copy=aux;
-                    aux=p;
-                    p=copy;
-               */
+                    
+                    strcpy(copyDate,aux->date);    
+                    strcpy(copyFirstName,aux->firstName);
+                    strcpy(copyLastName,aux->lastName);
+
+                    strcpy(aux->date,p->date);    
+                    strcpy(aux->firstName,p->firstName);
+                    strcpy(aux->lastName,p->lastName);
+
+                    strcpy(p->date,copyDate);    
+                    strcpy(p->firstName,copyFirstName);
+                    strcpy(p->lastName,copyLastName);
                 }
 }
 int main()
@@ -125,9 +104,9 @@ int main()
     fin>>nr;  
     for(i=0;i<nr;i++)
         {
-
-            fin>>lastName;
             fin>>firstName;
+            fin>>lastName;
+
             fin>>date;
 
             list.addMember(firstName,lastName,date);

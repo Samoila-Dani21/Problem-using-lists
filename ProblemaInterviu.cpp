@@ -4,7 +4,8 @@
 #include <string.h>
 using namespace std;
 
-ifstream fin("Input.txt");             //declared and openning file
+ifstream fin("Input.txt");             //declared and opened file
+ofstream fout("Output.txt");
 
 typedef struct MemberList{             //the structure of the members of a family
 
@@ -110,6 +111,13 @@ void ListPeople::showList(){
                 cout<<temp->firstName<<" ";
             cout<<endl;
         }
+    for(aux=head;aux!=NULL;aux=aux->next)
+        {
+            fout<<aux->lastName<<": ";
+            for(temp=aux->members; temp!=NULL; temp=temp->next)
+                fout<<temp->firstName<<" ";
+            fout<<endl;
+        }
 }
 void ListPeople::sortByDate(){
     LIST *aux;
@@ -147,9 +155,9 @@ int main()
             fin>>date;
             list.addMember(firstName,lastName,date);
         }
-    
+    fin.close();
     list.sortByDate();
     list.showList();
-    fin.close();
+
     return 0;
 }

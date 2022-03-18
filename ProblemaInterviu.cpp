@@ -5,13 +5,26 @@
 using namespace std;
 
 ifstream fin("Input.txt");
-typedef struct PeopleList{
 
-    char lastName[20],firstName[20],date[11];
-    struct PeopleList *next;
-    struct PeopleList *prev;
+typedef struct MemberList{
+
+    char firstName[20],date[11];
+    struct MemberList *next;
+}MEMBER;
+typedef struct FamilyList{
+    char lastName[20];
+    struct MemberList *members;
+    struct FamilyList *next;
+    
 }LIST;
 void Test(LIST *p)
+{
+    if(p==NULL)
+    {
+        cout<<"Alocarea nu a reusit!";
+    }
+}
+void Test(MEMBER *p)
 {
     if(p==NULL)
     {
@@ -27,7 +40,7 @@ public:
     ~ListPeople();
     void addMember(char fn[20],char ln[20],char data[20]);
     void showList();
-    void sortByFamily();
+    void sortByDate();
     void swap(LIST **head,LIST *p,LIST* q);
 };
 ListPeople::ListPeople(){  
@@ -38,66 +51,92 @@ ListPeople::~ListPeople(){
 }
 void ListPeople::addMember(char fn[20],char ln[20],char data[20]){
     LIST *aux,*q;
-    if(head==NULL)
+    MEMBER *memb,*temp;
+    if(head==NULL)                      
         {
-            
             head=new LIST;
             Test(head);
             head->next=NULL;
-            head->prev=NULL;
-            aux=head;
+            strcpy(head->lastName,ln);
+            memb=new MEMBER;
 
-            strcpy(aux->date,data);    
-            strcpy(aux->firstName,fn);
-            strcpy(aux->lastName,ln);
+            strcpy(memb->date,data);    
+            strcpy(memb->firstName,fn);
+            memb->next=NULL;
+            head->members=memb;    
         }
     else if(head!=NULL)
     {
-        for(aux=head;aux!=NULL;)
+        
+        for(aux=head ; aux!=NULL ; q=aux,aux=aux->next)
+            if(strcmp(aux->lastName,ln)==0)
+                break;
+        if(aux==NULL)
         {
-            q=aux;
-            aux=aux->next;
-            
+            aux=new LIST;
+            Test(aux);
+            aux->next=NULL;
+            strcpy(aux->lastName,ln);
+            memb=new MEMBER;
+            Test(memb);
+
+            strcpy(memb->date,data);    
+            strcpy(memb->firstName,fn);
+            memb->next=NULL;
+            aux->members=memb;
+
+            q->next=aux;
         }
-        aux=new LIST;
-        Test(aux);
-        aux->prev=q;
-        strcpy(aux->date,data);    
-        strcpy(aux->firstName,fn);
-        strcpy(aux->lastName,ln);
-        aux->next=NULL;
-        q->next=aux;
+        else
+        {
+            for(temp=aux->members;temp!=NULL;memb=temp,temp=temp->next);
+
+            temp=new MEMBER;
+            strcpy(temp->date,data);    
+            strcpy(temp->firstName,fn);
+            temp->next=NULL;
+            memb->next=temp;
+        }
+        
+        
     }
 }
 void ListPeople::showList(){
     LIST *aux;
+    MEMBER *temp;
     for(aux=head;aux!=NULL;aux=aux->next)
-        cout<<aux->firstName<<" "<<aux->lastName<<" "<<aux->date<<endl;
+        {
+            cout<<aux->lastName<<": ";
+            for(temp=aux->members; temp!=NULL; temp=temp->next)
+                cout<<temp->firstName<<" ";
+            cout<<endl;
+        }
 }
-void ListPeople::sortByFamily(){
-    LIST *aux,*p;
-    char copyFirstName[20],copyLastName[20],copyDate[11];
-    for(aux=head;aux!=NULL;aux=aux->next)
-        for(p=aux->next;p!=NULL;p=p->next)
-            if(strcmp(aux->date,p->date)>0)
+void ListPeople::sortByDate(){
+    LIST *aux;
+    MEMBER *temp,*cont;
+    char copyFirstName[20],copyDate[11];
+    for( aux=head ; aux!=NULL ; aux=aux->next )
+        for( temp=aux->members ; temp->next!=NULL ; temp=temp->next)
+            for( cont=aux->members->next ; cont != NULL ; cont=cont->next )
+                if(strcmp(temp->date,cont->date)>0)
                 {
                     
-                    strcpy(copyDate,aux->date);    
-                    strcpy(copyFirstName,aux->firstName);
-                    strcpy(copyLastName,aux->lastName);
+                    strcpy(copyDate,temp->date);    
+                    strcpy(copyFirstName,temp->firstName);
+                    //strcpy(copyLastName,aux->lastName);
 
-                    strcpy(aux->date,p->date);    
-                    strcpy(aux->firstName,p->firstName);
-                    strcpy(aux->lastName,p->lastName);
+                    strcpy(temp->date,cont->date);    
+                    strcpy(temp->firstName,cont->firstName);
+                    //strcpy(->lastName,p->lastName);
 
-                    strcpy(p->date,copyDate);    
-                    strcpy(p->firstName,copyFirstName);
-                    strcpy(p->lastName,copyLastName);
+                    strcpy(cont->date,copyDate);    
+                    strcpy(cont->firstName,copyFirstName);
+                    //strcpy(p->lastName,copyLastName);
                 }
 }
 int main()
 {
-
     int nr=0,i;
     char firstName[20],lastName[20],date[20];
     ListPeople list;
@@ -106,13 +145,12 @@ int main()
         {
             fin>>firstName;
             fin>>lastName;
-
             fin>>date;
-
             list.addMember(firstName,lastName,date);
         }
     
-    list.sortByFamily();
+    list.sortByDate();
     list.showList();
     fin.close();
+    return 0;
 }

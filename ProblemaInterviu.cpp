@@ -4,15 +4,15 @@
 #include <string.h>
 using namespace std;
 
-ifstream fin("Input.txt");
+ifstream fin("Input.txt");             //declared and openning file
 
-typedef struct MemberList{
+typedef struct MemberList{             //the structure of the members of a family
 
     char firstName[20],date[11];
     struct MemberList *next;
 }MEMBER;
-typedef struct FamilyList{
-    char lastName[20];
+typedef struct FamilyList{              //the structure of family
+    char lastName[20];  
     struct MemberList *members;
     struct FamilyList *next;
     
@@ -41,7 +41,6 @@ public:
     void addMember(char fn[20],char ln[20],char data[20]);
     void showList();
     void sortByDate();
-    void swap(LIST **head,LIST *p,LIST* q);
 };
 ListPeople::ListPeople(){  
     head=NULL;
@@ -54,43 +53,43 @@ void ListPeople::addMember(char fn[20],char ln[20],char data[20]){
     MEMBER *memb,*temp;
     if(head==NULL)                      
         {
-            head=new LIST;
+            head=new LIST;                  //creating first family 
             Test(head);
             head->next=NULL;
             strcpy(head->lastName,ln);
-            memb=new MEMBER;
+            memb=new MEMBER;                //adding a member
 
             strcpy(memb->date,data);    
             strcpy(memb->firstName,fn);
             memb->next=NULL;
-            head->members=memb;    
+            head->members=memb;             
         }
     else if(head!=NULL)
     {
         
-        for(aux=head ; aux!=NULL ; q=aux,aux=aux->next)
-            if(strcmp(aux->lastName,ln)==0)
+        for(aux=head ; aux!=NULL ; q=aux,aux=aux->next)     //goes to an existing family if the new member is from the same family
+            if(strcmp(aux->lastName,ln)==0)                 //or makes the variable NULL by going thru the list
                 break;
         if(aux==NULL)
         {
-            aux=new LIST;
+            aux=new LIST;                           //creating first family 
             Test(aux);
             aux->next=NULL;
             strcpy(aux->lastName,ln);
             memb=new MEMBER;
             Test(memb);
 
-            strcpy(memb->date,data);    
+            strcpy(memb->date,data);                //adding a member
             strcpy(memb->firstName,fn);
             memb->next=NULL;
             aux->members=memb;
 
             q->next=aux;
         }
-        else
+        else                                        //case in whitch there is a family with the same name
         {
-            for(temp=aux->members;temp!=NULL;memb=temp,temp=temp->next);
-
+            for(temp=aux->members;temp!=NULL;memb=temp,temp=temp->next);  
+                                                    //makes the variable NULL by going thru the list
             temp=new MEMBER;
             strcpy(temp->date,data);    
             strcpy(temp->firstName,fn);
@@ -120,19 +119,19 @@ void ListPeople::sortByDate(){
         for( temp=aux->members ; temp->next!=NULL ; temp=temp->next)
             for( cont=aux->members->next ; cont != NULL ; cont=cont->next )
                 if(strcmp(temp->date,cont->date)>0)
-                {
+                {                                                      
                     
                     strcpy(copyDate,temp->date);    
                     strcpy(copyFirstName,temp->firstName);
-                    //strcpy(copyLastName,aux->lastName);
+
 
                     strcpy(temp->date,cont->date);    
                     strcpy(temp->firstName,cont->firstName);
-                    //strcpy(->lastName,p->lastName);
+
 
                     strcpy(cont->date,copyDate);    
                     strcpy(cont->firstName,copyFirstName);
-                    //strcpy(p->lastName,copyLastName);
+
                 }
 }
 int main()
